@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1020">
+<title>Let's Learn — Learn Together</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--bg:#f6f8fc;--panel:#ffffff;--panel2:#f0f4fa;--line:#e5eaf2;--text:#172033;--muted:#718096;--blue:#5378f5;--purple:#8a66ef;--cyan:#32b7d8;--green:#25b781}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+button{font:inherit;cursor:pointer}
+.layout{min-height:100vh;display:flex}
+.sidebar{width:245px;background:#ffffff;border-right:1px solid var(--line);padding:25px 17px;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:5}
+.brand{display:flex;align-items:center;gap:12px;padding:2px 9px 28px}
+.logo{width:42px;height:42px;border:1.5px solid #7c91ff;border-radius:50%;display:grid;place-items:center;position:relative;box-shadow:0 0 22px #7185ff22}
+.logo span{font-weight:900;font-size:16px;letter-spacing:-3px;margin-left:-2px}
+.brandname{font-weight:800;font-size:17px;letter-spacing:-.5px}
+.brandname small{display:block;color:var(--muted);font-size:10px;font-weight:500;letter-spacing:1.2px;margin-top:4px}
+.navlabel{font-size:10px;color:#64718b;letter-spacing:1.5px;font-weight:700;padding:12px 11px}
+.nav{display:flex;flex-direction:column;gap:5px}
+.nav button{background:none;border:0;color:#65748d;padding:12px 13px;border-radius:12px;text-align:left;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:600;transition:.2s}
+.nav button:hover,.nav button.active{background:#edf2ff;color:#3454b4}
+.nav button.active{box-shadow:inset 3px 0 #7891ff}
+.icon{width:20px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:auto}
+.joinbox{padding:15px;border:1px solid #2b3652;background:linear-gradient(140deg,#edf2ff,#f6f8fc);border-radius:16px;margin-bottom:16px}
+.joinbox strong{font-size:13px}
+.joinbox p{font-size:11px;line-height:1.6;color:var(--muted);margin:8px 0 12px}
+.joinbox button{border:0;background:#7089ff;color:#fff;padding:9px 11px;border-radius:9px;font-size:11px;font-weight:700;width:100%}
+.usermini{display:flex;align-items:center;gap:10px;padding:10px}
+.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#758bff,#b17aff);font-weight:800;font-size:12px;color:#fff}
+.usermini strong{font-size:12px;display:block}
+.usermini small{font-size:10px;color:var(--muted)}
+.main{margin-left:245px;width:calc(100% - 245px);padding:27px 34px 60px;max-width:1500px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.search{width:min(370px,50%);position:relative}
+.search input{width:100%;background:#ffffff;border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 40px;color:var(--text);outline:none}
+.search:before{content:"⌕";position:absolute;left:14px;top:8px;color:#8290ac;font-size:22px}
+.topright{display:flex;align-items:center;gap:13px}
+.roundbtn{width:39px;height:39px;border:1px solid var(--line);background:#ffffff;color:#53627b;border-radius:12px}
+.profilebtn{display:flex;align-items:center;gap:10px;background:none;border:0;color:var(--text)}
+.profilebtn span{text-align:left;font-size:12px;font-weight:700;color:var(--text)}
+.profilebtn small{display:block;color:var(--muted);font-weight:500;margin-top:3px}
+.hero{position:relative;overflow:hidden;border:1px solid #263456;border-radius:22px;background:linear-gradient(115deg,#eaf0ff,#f0edff 55%,#e9f8ff);padding:31px 34px;display:flex;justify-content:space-between;align-items:center;min-height:230px}
+.hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid #718cff20;right:60px;top:-90px;box-shadow:0 0 0 35px #9aafff08,0 0 0 75px #9aafff06}
+.hero-content{position:relative;z-index:1;max-width:560px}
+.eyebrow{color:#5378f5;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.hero h1{font-size:clamp(25px,3vw,36px);line-height:1.2;letter-spacing:-1.3px;margin:12px 0}
+.hero p{color:#5e6b83;font-size:13px;line-height:1.7;max-width:450px;margin:0 0 20px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.primary,.secondary{padding:11px 16px;border-radius:10px;border:0;font-size:12px;font-weight:700}
+.primary{background:linear-gradient(120deg,#718cff,#8d77ff);color:white;box-shadow:0 8px 22px #718cff25}
+.secondary{background:#ffffff;color:#3e506e;border:1px solid #dbe3f0}
+.hero-art{position:relative;z-index:1;width:210px;min-width:160px;height:180px;display:grid;place-items:center}
+.orbit{width:150px;height:150px;border:1px solid #b3bfff48;border-radius:50%;transform:rotate(-25deg);display:grid;place-items:center}
+.orbit:before{content:"";position:absolute;width:190px;height:75px;border:1px solid #b3bfff40;border-radius:50%;transform:rotate(48deg)}
+.orbit:after{content:"";position:absolute;width:105px;height:105px;background:linear-gradient(135deg,#708aff,#9b7cff);border-radius:30px;transform:rotate(45deg);box-shadow:0 15px 45px #708aff55}
+.orbit b{position:relative;z-index:2;font-size:38px;letter-spacing:-7px;margin-left:-5px;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:21px 0 27px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px;display:flex;gap:13px;align-items:center}
+.stat-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:19px;background:#718cff1b}
+.stat strong{font-size:20px;display:block;letter-spacing:-.5px}
+.stat small{font-size:10px;color:var(--muted);display:block;margin-top:5px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:27px 0 15px}
+.sectionhead h2{font-size:17px;margin:0;letter-spacing:-.4px}
+.sectionhead p{font-size:11px;color:var(--muted);margin:5px 0 0}
+.textbtn{background:none;border:0;color:#5378f5;font-size:11px;font-weight:700}
+.subjects{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.subject{border:1px solid var(--line);background:var(--panel);padding:17px;border-radius:16px;transition:.2s;cursor:pointer}
+.subject:hover{transform:translateY(-3px);border-color:#718cff60;background:#f3f6fb}
+.subjecticon{width:43px;height:43px;display:grid;place-items:center;border-radius:13px;font-size:21px;margin-bottom:14px}
+.subject h3{font-size:13px;margin:0 0 6px}
+.subject p{font-size:10px;color:var(--muted);margin:0}
+.subject .arrow{float:right;color:#8293bb}
+.bottomgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:15px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:18px}
+.boxhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.boxhead h3{font-size:14px;margin:0}
+.boxhead span{color:var(--muted);font-size:10px}
+.challenge{display:flex;align-items:center;gap:12px;padding:12px;background:#f3f6fb;border:1px solid #ffffff08;border-radius:12px;margin-bottom:9px}
+.challenge:last-child{margin-bottom:0}
+.chalicon{width:40px;height:40px;display:grid;place-items:center;background:#758bff1a;border-radius:12px;font-size:18px}
+.chaltext{flex:1}
+.chaltext strong{font-size:12px;display:block}
+.chaltext small{font-size:10px;color:var(--muted);display:block;margin-top:4px}
+.challenge button{border:1px solid #5368ad;background:#edf2ff;color:#4662c4;border-radius:8px;padding:8px 10px;font-size:10px;font-weight:700}
+.rankrow{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line)}
+.rankrow:last-child{border:0}
+.rank{width:20px;font-size:11px;color:var(--muted);font-weight:700}
+.rankavatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800;background:#273653;color:#fff}
+.rankname{flex:1;font-size:11px;font-weight:600}
+.points{font-size:11px;color:#5378f5;font-weight:700}
+.mobile-nav{display:none}
+.notice{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 17px;background:#ffffff;border:1px solid #dbe3f0;color:#25324a;border-radius:12px;font-size:12px;z-index:20;box-shadow:0 12px 40px #0007}
+.mobiletop{display:none}
+.modalbg{display:none;position:fixed;inset:0;background:#17203355;backdrop-filter:blur(5px);z-index:30;align-items:center;justify-content:center;padding:18px}
+.modal{width:min(620px,100%);background:#ffffff;border:1px solid #d9e1ef;border-radius:20px;padding:26px}
+.modalhead{display:flex;justify-content:space-between;align-items:center}
+.modalhead h3{margin:0;font-size:19px}
+.close{border:0;background:#edf2fa;color:#53627b;width:32px;height:32px;border-radius:9px}
+.modal p{font-size:12px;color:var(--muted);line-height:1.6}
+.modal input,.modal select{width:100%;padding:12px;margin:7px 0;background:#f8faff;border:1px solid #dbe3f0;color:var(--text);border-radius:10px}
+.levelgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.levelcard{border:1px solid #e0e7f2;background:#fff;border-radius:15px;padding:17px 12px;text-align:center;color:#1d2940;transition:.18s;cursor:pointer}
+.levelcard:hover{border-color:#718cff;background:#f4f7ff;transform:translateY(-2px)}
+.levelcard .lvnum{width:38px;height:38px;border-radius:12px;margin:0 auto 10px;display:grid;place-items:center;background:#edf2ff;color:#536fe0;font-size:15px;font-weight:900}
+.levelcard strong{display:block;font-size:13px;margin-bottom:6px}
+.levelcard small{font-size:10px;color:#718096;line-height:1.45}
+.quiztop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.quizbadge{background:#eef2ff;color:#526bd3;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:800}
+.quizprogress{height:7px;background:#edf1f7;border-radius:10px;overflow:hidden;margin:18px 0}
+.quizprogress div{height:100%;background:linear-gradient(90deg,#5378f5,#9b79ff);border-radius:10px;transition:width .25s}
+.quizmeta{display:flex;justify-content:space-between;font-size:11px;color:#748198}
+.quizquestion{font-size:20px;line-height:1.45;font-weight:800;color:#172033;margin:22px 0}
+.quizanswers{display:grid;gap:10px}
+.quizanswers .option{width:100%;text-align:left;border:1px solid #dbe3f0;background:#f8faff;color:#26344d;padding:15px;border-radius:12px;display:flex;gap:12px;align-items:center;font-size:13px;font-weight:600}
+.quizanswers .option:hover{border-color:#8498ff;background:#eef2ff;color:#334fae}
+.answerletter{width:27px;height:27px;flex:none;display:grid;place-items:center;border-radius:8px;background:#edf2fa;color:#53627b;font-weight:800}
+.option.correct{background:#ecfbf4!important;border-color:#36bb83!important;color:#146d4c!important}
+.option.wrong{background:#fff0f0!important;border-color:#e98080!important;color:#9a3434!important}
+.quizfeedback{padding:13px 14px;border-radius:12px;margin-top:13px;font-size:12px;line-height:1.6;background:#f3f6fb;color:#506078}
+.quizactions{display:flex;justify-content:flex-end;margin-top:15px}
+@media(max-width:1100px){.subjects{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.hero-art{width:160px}.main{padding:24px}}
+@media(max-width:760px){html,body{overflow-x:hidden}.sidebar{display:none}.main{margin:0;width:100%;padding:17px 15px 90px}.mobiletop{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.mobiletop .brand{padding:0}.topbar{margin-bottom:18px}.search{width:100%}.topright .profilebtn span{display:none}.hero{padding:24px 21px;min-height:220px}.hero-art{width:115px;min-width:110px}.orbit{width:95px;height:95px}.orbit:before{width:125px;height:50px}.orbit:after{width:70px;height:70px;border-radius:20px}.orbit b{font-size:26px}.hero p{font-size:12px}.stats{gap:9px}.stat{padding:12px;gap:9px}.stat-icon{width:35px;height:35px}.stat strong{font-size:17px}.subjects{gap:9px}.subject{padding:13px}.bottomgrid{grid-template-columns:1fr}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#ffffff;border-top:1px solid var(--line);padding:8px 5px calc(8px + env(safe-area-inset-bottom));z-index:10;justify-content:space-around;align-items:center;box-shadow:0 -4px 16px #14213a08}.mobile-nav button{appearance:none;border:0!important;outline:0;background:transparent!important;color:#718096!important;font-size:10px!important;line-height:1.2;padding:5px 3px!important;margin:0;min-width:0;flex:1;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;border-radius:0!important;box-shadow:none!important}.mobile-nav button.active{color:#5378f5!important}.mobile-nav i{font-style:normal;font-size:18px;line-height:1}}
+@media(max-width:430px){.hero-art{display:none}.hero h1{font-size:27px}.subjects{grid-template-columns:repeat(2,1fr)}}
+.brand .logo{width:42px!important;height:42px!important;border:0!important;border-radius:10px!important;display:block!important;overflow:hidden!important;position:relative!important;box-shadow:none!important;flex:0 0 42px!important}
+.brand .logo svg{width:42px!important;height:42px!important;max-width:42px!important;max-height:42px!important;display:block!important}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand"><div class="logo"><svg xmlns="http://www.w3.org/2000/svg" width="1248" height="1248" viewBox="0 0 1248 1248"><defs><linearGradient id="blueGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#31F4FF"/><stop offset="45%" stop-color="#00BFFF"/><stop offset="100%" stop-color="#174BFF"/></linearGradient><linearGradient id="purpleGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#E85BFF"/><stop offset="50%" stop-color="#A000FF"/><stop offset="100%" stop-color="#D76BFF"/></linearGradient></defs><rect width="1248" height="1248" fill="#000"/><path d="M342 360 L463 295 L463 640 L708 640 L708 739 L342 739 Z" fill="url(#blueGradient)"/><path d="M543 437 L897 437 L897 805 L777 878 L777 522 L543 522 Z" fill="url(#purpleGradient)"/></svg></div><div class="brandname">Let's Learn<small>LEARN • PRACTICE • GROW</small></div></div>
+  <div class="navlabel">MENU</div>
+  <nav class="nav">
+    <button class="active" data-page="Home"><i class="icon">⌂</i>Home</button>
+    <button data-page="Practice"><i class="icon">▣</i>Practice</button>
+    <button data-page="Challenges"><i class="icon">⚔</i>Challenges</button>
+    <button data-page="Leaderboard"><i class="icon">♜</i>Leaderboard</button>
+    <button data-page="Progress"><i class="icon">▥</i>My Progress</button>
+  </nav>
+  <div class="navlabel">PERSONAL</div>
+  <nav class="nav"><button data-page="Profile"><i class="icon">◉</i>My Profile</button><button data-page="Settings"><i class="icon">⚙</i>Settings</button></nav>
+  <div class="sidebar-bottom">
+    <div class="joinbox"><strong>Study with your friends!</strong><p>Create a room and practice together. Make learning more fun.</p><button onclick="openChallenge()">Create a room →</button></div>
+    <div class="usermini"><div class="avatar" id="side-avatar">Y</div><div><strong id="side-name">You</strong><small>Student account</small></div></div>
+  </div>
+</aside>
+<main class="main">
+  <div class="mobiletop"><div class="brand"><div class="logo"><svg xmlns="http://www.w3.org/2000/svg" width="1248" height="1248" viewBox="0 0 1248 1248"><defs><linearGradient id="blueGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#31F4FF"/><stop offset="45%" stop-color="#00BFFF"/><stop offset="100%" stop-color="#174BFF"/></linearGradient><linearGradient id="purpleGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#E85BFF"/><stop offset="50%" stop-color="#A000FF"/><stop offset="100%" stop-color="#D76BFF"/></linearGradient></defs><rect width="1248" height="1248" fill="#000"/><path d="M342 360 L463 295 L463 640 L708 640 L708 739 L342 739 Z" fill="url(#blueGradient)"/><path d="M543 437 L897 437 L897 805 L777 878 L777 522 L543 522 Z" fill="url(#purpleGradient)"/></svg></div><div class="brandname">Let's Learn<small>LEARN • PRACTICE • GROW</small></div></div><button class="roundbtn" onclick="toast('Notifications enabled!')">♧</button></div>
+  <div class="topbar">
+    <div class="search"><input id="search" placeholder="Search subjects, topics, tests..." oninput="searchItems(this.value)"></div>
+    <div class="topright"><button class="roundbtn" onclick="toast('You are all caught up!')">♧</button><button class="profilebtn" onclick="openProfileSettings()"><div class="avatar" id="top-avatar">Y</div><span id="top-name">Student<small>My account</small></span></button></div>
+  </div>
+  <section class="hero">
+    <div class="hero-content"><div class="eyebrow">YOUR LEARNING SPACE</div><h1>Learn together.<br>Achieve more. 🚀</h1><p>Practice, challenge your friends, and make every study session count. Your next achievement starts here.</p><div class="actions"><button class="primary" onclick="startQuiz()">Start Practicing&nbsp; →</button><button class="secondary" onclick="openChallenge()">Challenge Friends&nbsp; ⚔</button></div></div>
+    <div class="hero-art"><div class="orbit"><b>LL</b></div></div>
+  </section>
+  <section class="stats">
+    <div class="stat"><div class="stat-icon">🔥</div><div><strong id="streak">1 day</strong><small>Practice streak</small></div></div>
+    <div class="stat"><div class="stat-icon">🎯</div><div><strong id="tests">0</strong><small>Tests completed</small></div></div>
+    <div class="stat"><div class="stat-icon">⚡</div><div><strong id="xp">0 XP</strong><small>Total points</small></div></div>
+    <div class="stat"><div class="stat-icon">📈</div><div><strong id="accuracy">—</strong><small>Average accuracy</small></div></div>
+  </section>
+  <section>
+    <div class="sectionhead"><div><h2>Explore subjects</h2><p>Choose a subject to start your practice</p></div><button class="textbtn" onclick="toast('All subjects available')">View all →</button></div>
+    <div class="subjects" id="subjects">
+      <div class="subject" data-search="biology" onclick="showLevelPicker('Biology')"><span class="arrow">↗</span><div class="subjecticon" style="background:#35c58b18">🧬</div><h3>Biology</h3><p>Life sciences & concepts</p></div>
+      <div class="subject" data-search="physics" onclick="showLevelPicker('Physics')"><span class="arrow">↗</span><div class="subjecticon" style="background:#6c8cff18">⚛️</div><h3>Physics</h3><p>Understand the universe</p></div>
+      <div class="subject" data-search="chemistry" onclick="showLevelPicker('Chemistry')"><span class="arrow">↗</span><div class="subjecticon" style="background:#f2a65b18">🧪</div><h3>Chemistry</h3><p>Molecules & reactions</p></div>
+      <div class="subject" data-search="mathematics maths" onclick="showLevelPicker('Mathematics')"><span class="arrow">↗</span><div class="subjecticon" style="background:#b27cff18">📐</div><h3>Mathematics</h3><p>Logic, numbers & problem solving</p></div>
+      <div class="subject" data-search="english" onclick="showLevelPicker('English')"><span class="arrow">↗</span><div class="subjecticon" style="background:#f07f9b18">📖</div><h3>English</h3><p>Language & literature</p></div>
+      <div class="subject" data-search="history" onclick="showLevelPicker('History')"><span class="arrow">↗</span><div class="subjecticon" style="background:#f1c65b18">🏛️</div><h3>History</h3><p>Explore the past</p></div>
+      <div class="subject" data-search="geography" onclick="showLevelPicker('Geography')"><span class="arrow">↗</span><div class="subjecticon" style="background:#55d6f518">🌍</div><h3>Geography</h3><p>People & planet</p></div>
+      <div class="subject" data-search="computer computer science" onclick="showLevelPicker('Computer')"><span class="arrow">↗</span><div class="subjecticon" style="background:#9ca9bd18">💻</div><h3>Computer</h3><p>Technology & coding</p></div>
+    </div>
+  </section>
+  <div class="bottomgrid">
+    <section>
+      <div class="sectionhead"><div><h2>Quick practice</h2><p>Jump right into a learning session</p></div></div>
+      <div class="box">
+        <div class="challenge"><div class="chalicon">⏱️</div><div class="chaltext"><strong>Quick 5 Questions</strong><small>A short mixed quiz · 3 minutes</small></div><button onclick="startQuiz()">Start →</button></div>
+        <div class="challenge"><div class="chalicon">🧩</div><div class="chaltext"><strong>Topic practice</strong><small>Choose a topic to sharpen your skills</small></div><button onclick="chooseSubject()">Explore →</button></div>
+        <div class="challenge"><div class="chalicon">⚔️</div><div class="chaltext"><strong>Friend challenge</strong><small>See who's got the highest score</small></div><button onclick="openChallenge()">Play →</button></div>
+      </div>
+    </section>
+    <section>
+      <div class="sectionhead"><div><h2>Leaderboard</h2><p>Top learners</p></div></div>
+      <div class="box">
+        <div class="boxhead"><h3>🏆 Weekly ranking</h3><span>This week</span></div>
+        <div class="rankrow"><div class="rank">1</div><div class="rankavatar" style="background:#634b2e">R</div><div class="rankname">Rahul</div><div class="points">1,240 XP</div></div>
+        <div class="rankrow"><div class="rank">2</div><div class="rankavatar" style="background:#3c5277">A</div><div class="rankname">Aman</div><div class="points">980 XP</div></div>
+        <div class="rankrow"><div class="rank">3</div><div class="rankavatar" style="background:#694d77">S</div><div class="rankname">Sneha</div><div class="points">875 XP</div></div>
+        <div class="rankrow"><div class="rank">4</div><div class="rankavatar" id="my-rank-avatar">Y</div><div class="rankname" id="my-rank-name">You</div><div class="points" id="yourxp">0 XP</div></div>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+<div class="mobile-nav">
+<button class="active" data-page="Home"><i>⌂</i>Home</button><button data-page="Practice"><i>▣</i>Practice</button><button data-page="Challenges"><i>⚔</i>Challenge</button><button data-page="Leaderboard"><i>♜</i>Ranks</button><button data-page="Profile"><i>◉</i>Profile</button>
+</div>
+<div class="notice" id="notice"></div>
+<div class="modalbg" id="modalbg" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
+<script>
+let xp = parseInt(localStorage.getItem('ll_xp')) || 0;
+let tests = parseInt(localStorage.getItem('ll_tests')) || 0;
+let correct = parseInt(localStorage.getItem('ll_correct')) || 0;
+let total = parseInt(localStorage.getItem('ll_total')) || 0;
+let username = localStorage.getItem('ll_username') || 'Student';
+
+function updateUIStats() {
+  document.getElementById('xp').textContent = xp + ' XP';
+  document.getElementById('yourxp').textContent = xp + ' XP';
+  document.getElementById('tests').textContent = tests;
+  document.getElementById('accuracy').textContent = total > 0 ? Math.round(correct / total * 100) + '%' : '—';
+  let initial = username.charAt(0).toUpperCase();
+  document.getElementById('top-avatar').textContent = initial;
+  document.getElementById('side-avatar').textContent = initial;
+  document.getElementById('my-rank-avatar').textContent = initial;
+  document.getElementById('top-name').innerHTML = username + '<small>My account</small>';
+  document.getElementById('side-name').textContent = username;
+  document.getElementById('my-rank-name').textContent = username;
+}
+updateUIStats();
+
+const questionSets = {
+  "Mixed Subjects": {
+    1: [{q:"Which organelle is known as the powerhouse of the cell?",a:["Ribosome","Mitochondria","Golgi body","Nucleus"],c:1,ex:"Mitochondria produce cellular energy."}, {q:"What is the SI unit of electric current?",a:["Volt","Ohm","Ampere","Watt"],c:2,ex:"Current is measured in amperes."}],
+    2: [{q:"If a body accelerates at 2 m/s² for 5 s from rest, final speed is:",a:["5 m/s","10 m/s","12 m/s","25 m/s"],c:1,ex:"v = u + at = 0 + 2*5 = 10 m/s."}],
+    3: [{q:"A capacitor of capacitance C charged to potential V has energy:",a:["CV","CV²","½CV²","½C²V"],c:2,ex:"Stored energy U = ½CV²."}]
+  },
+  "Biology": {
+    1: [{q:"Basic unit of life is:",a:["Tissue","Cell","Organ","Atom"],c:1,ex:"Cell is the fundamental unit of life."}, {q:"Which gas is released during photosynthesis?",a:["Oxygen","Carbon dioxide","Nitrogen","Hydrogen"],c:0,ex:"Oxygen is released by plants."}],
+    2: [{q:"Process of cell division resulting in identical cells is:",a:["Meiosis","Mitosis","Binary fission","Budding"],c:1,ex:"Mitosis produces identical daughter cells."}],
+    3: [{q:"In Hardy-Weinberg equilibrium, heterozygous frequency is:",a:["p²","q²","2pq","p+q"],c:2,ex:"Heterozygous frequency is represented by 2pq."}]
+  },
+  "Physics": {
+    1: [{q:"SI unit of force is:",a:["Joule","Newton","Pascal","Watt"],c:1,ex:"Force is measured in Newtons (N)."}],
+    2: [{q:"Acceleration due to gravity on Earth is approximately:",a:["8.9 m/s²","9.8 m/s²","10.5 m/s²","11.2 m/s²"],c:1,ex:"Standard g is ~9.8 m/s²."}],
+    3: [{q:"Planck's constant has dimensions of:",a:["Energy","Momentum","Action (Energy × time)","Power"],c:2,ex:"Planck's constant unit is Joule-second."}]
+  },
+  "Chemistry": {
+    1: [{q:"Chemical symbol for Gold is:",a:["Ag","Au","Pb","Fe"],c:1,ex:"Au stands for Aurum (Gold)."}],
+    2: [{q:"pH of an acidic solution is:",a:["Equal to 7","Greater than 7","Less than 7","Zero always"],c:2,ex:"Acids have pH less than 7."}],
+    3: [{q:"The geometry of methane (CH4) molecule is:",a:["Linear","Trigonal planar","Tetrahedral","Octahedral"],c:2,ex:"Methane is tetrahedral with 109.5° angles."}]
+  },
+  "Mathematics": {
+    1: [{q:"Value of π (pi) is approximately:",a:["2.14","3.14","4.14","1.41"],c:1,ex:"Pi is approximately 3.14159."}],
+    2: [{q:"Derivative of sin(x) is:",a:["-cos(x)","cos(x)","-sin(x)","tan(x)"],c:1,ex:"d/dx(sin x) = cos x."}],
+    3: [{q:"Integral of 1/x with respect to x is:",a:["x² + C","ln|x| + C","e^x + C","-1/x² + C"],c:1,ex:"∫(1/x)dx = ln|x| + C."}]
+  },
+  "English": {
+    1: [{q:"Identify the noun in the sentence: 'The cat slept peacefully.'",a:["The","cat","slept","peacefully"],c:1,ex:"'Cat' is a noun."}],
+    2: [{q:"What is the synonym of 'Benevolent'?",a:["Hostile","Kind","Greedy","Lazy"],c:1,ex:"Benevolent means well-meaning and kind."}],
+    3: [{q:"Choose the correct passive voice of: 'She wrote a letter.'",a:["A letter is written by her.","A letter was written by her.","A letter has been written.","Letter was writing by her."],c:1,ex:"Past tense requires 'was written'."}]
+  },
+  "History": {
+    1: [{q:"In which year did India gain independence?",a:["1945","1947","1950","1952"],c:1,ex:"India became independent on August 15, 1947."}],
+    2: [{q:"Who was the first Prime Minister of India?",a:["Mahatma Gandhi","Sardar Patel","Jawaharlal Nehru","Subhas Chandra Bose"],c:2,ex:"Jawaharlal Nehru was the first PM."}],
+    3: [{q:"The Indus Valley Civilization was primarily a:",a:["Nomadic society","Bronze Age civilization","Iron Age empire","Medieval kingdom"],c:1,ex:"It was a prominent Bronze Age civilization."}]
+  },
+  "Geography": {
+    1: [{q:"Which is the largest continent on Earth?",a:["Africa","Asia","North America","Antarctica"],c:1,ex:"Asia is the largest continent."}],
+    2: [{q:"Which river is the longest in the world?",a:["Amazon","Nile","Yangtze","Mississippi"],c:1,ex:"The Nile is traditionally considered the longest."}],
+    3: [{q:"The layer of atmosphere closest to Earth's surface is:",a:["Stratosphere","Mesosphere","Troposphere","Thermosphere"],c:2,ex:"Troposphere is the lowest layer."}]
+  },
+  "Computer": {
+    1: [{q:"What does CPU stand for?",a:["Central Processing Unit","Computer Personal Unit","Central Program Utility","Control Processing Unit"],c:0,ex:"CPU stands for Central Processing Unit."}],
+    2: [{q:"Which language is styled as the language of the web?",a:["Python","C++","JavaScript","Java"],c:2,ex:"JavaScript runs natively in browsers."}],
+    3: [{q:"What is time complexity of binary search?",a:["O(n)","O(log n)","O(n²)","O(1)"],c:1,ex:"Binary search halves the search space each step: O(log n)."}],
+  }
+};
+
+let questions=[], quizIndex=0, quizScore=0, quizLevel=1, quizSubject="Mixed Subjects";
+
+function toast(msg){let n=document.getElementById('notice');n.textContent=msg;n.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>n.style.display='none',2500)}
+function openModal(content){document.getElementById('modal').innerHTML=content;document.getElementById('modalbg').style.display='flex'}
+function closeModal(){document.getElementById('modalbg').style.display='none'}
+
+function startQuiz(){showLevelPicker("Mixed Subjects")}
+
+function showLevelPicker(subject="Mixed Subjects"){
+  openModal(`<div class="modalhead"><h3>Choose difficulty for ${subject}</h3><button class="close" onclick="closeModal()">×</button></div><p>Pick a level to test your knowledge.</p><div class="levelgrid">
+  <button class="levelcard" onclick="beginQuiz(1,'${subject}')"><div class="lvnum">1</div><strong>Level 1 · Easy</strong><small>Basic concepts</small></button>
+  <button class="levelcard" onclick="beginQuiz(2,'${subject}')"><div class="lvnum">2</div><strong>Level 2 · Medium</strong><small>Application based</small></button>
+  <button class="levelcard" onclick="beginQuiz(3,'${subject}')"><div class="lvnum">3</div><strong>Level 3 · Hard</strong><small>Advanced problems</small></button>
+  </div>`)
+}
+
+function beginQuiz(level, subject="Mixed Subjects") {
+  quizLevel = level;
+  quizSubject = subject;
+  let subPool = questionSets[subject] || questionSets["Mixed Subjects"];
+  questions = subPool[level] || subPool[1];
+  quizIndex = 0;
+  quizScore = 0;
+  showQuestion();
+}
+
+function showQuestion(){
+  if(quizIndex >= questions.length){finishQuiz();return}
+  let q = questions[quizIndex], pct = (quizIndex / questions.length) * 100;
+  openModal(`<div class="quiztop"><div class="modalhead"><h3>${quizSubject} Practice</h3></div><span class="quizbadge">LEVEL ${quizLevel}</span></div><div class="quizprogress"><div style="width:${pct}%"></div></div><div class="quizmeta"><span>Question ${quizIndex+1} of ${questions.length}</span><span>${quizScore} correct</span></div><div class="quizquestion">${q.q}</div><div class="quizanswers">${q.a.map((v,i)=>`<button class="option" onclick="answer(${i})"><span class="answerletter">${String.fromCharCode(65+i)}</span>${v}</button>`).join('')}</div>`)
+}
+
+function answer(i){
+  let q = questions[quizIndex], isCorrect = (i === q.c);
+  if(isCorrect) quizScore++;
+  let options = document.querySelectorAll('.quizanswers .option');
+  options.forEach((el,idx)=>{el.disabled=true;if(idx===q.c)el.classList.add('correct');if(idx===i&&!isCorrect)el.classList.add('wrong')});
+  let feedback = document.createElement('div');
+  feedback.className = 'quizfeedback';
+  feedback.innerHTML = `<strong>${isCorrect ? 'Correct!' : 'Not quite.'}</strong> ${q.ex}`;
+  document.querySelector('.quizanswers').after(feedback);
+  let actions = document.createElement('div');
+  actions.className = 'quizactions';
+  actions.innerHTML = `<button class="primary" onclick="quizIndex++;showQuestion()">${quizIndex === questions.length-1 ? 'See results' : 'Next question'} →</button>`;
+  feedback.after(actions);
+}
+
+function finishQuiz(){
+  tests++;
+  correct += quizScore;
+  total += questions.length;
+  let gained = quizScore * 10 + 20;
+  xp += gained;
+
+  localStorage.setItem('ll_xp', xp);
+  localStorage.setItem('ll_tests', tests);
+  localStorage.setItem('ll_correct', correct);
+  localStorage.setItem('ll_total', total);
+  updateUIStats();
+
+  let percent = Math.round(quizScore / questions.length * 100);
+  openModal(`<div class="modalhead"><h3>Practice complete 🎉</h3><button class="close" onclick="closeModal()">×</button></div><div style="text-align:center;padding:14px 0"><span class="quizbadge">LEVEL ${quizLevel} · ${quizSubject}</span><div style="font-size:54px;font-weight:900;color:#24324b;margin:16px 0 3px">${percent}%</div><p style="margin:0">${quizScore} correct out of ${questions.length}</p><div style="font-size:20px;color:#5378f5;font-weight:800;margin:14px">+${gained} XP</div><p>${percent>=80?'Excellent work! Ready for the next level.':'Good effort! Review and try again.'}</p></div><div class="actions" style="justify-content:center"><button class="secondary" onclick="showLevelPicker('${quizSubject}')">Change level</button><button class="primary" onclick="beginQuiz(${quizLevel},'${quizSubject}')">Retry level</button></div>`)
+}
+
+function openChallenge(){
+  openModal(`<div class="modalhead"><h3>⚔️ Create a challenge</h3><button class="close" onclick="closeModal()">×</button></div><p>Set up a practice challenge.</p><input id="roomname" placeholder="Challenge name (e.g. Science Battle)"><select id="roomsubject"><option>Mixed Subjects</option><option>Biology</option><option>Physics</option><option>Chemistry</option><option>Mathematics</option></select><button class="primary" onclick="createRoom()">Create challenge</button>`)
+}
+
+function createRoom(){
+  let name = document.getElementById('roomname').value || 'Challenge Room';
+  let code = Math.random().toString(36).substring(2,7).toUpperCase();
+  openModal(`<div class="modalhead"><h3>Challenge created! 🎉</h3><button class="close" onclick="closeModal()">×</button></div><p>${name} is ready. Share code with friends:</p><div style="font-size:28px;font-weight:900;text-align:center;letter-spacing:5px;background:#f3f6fb;padding:18px;border-radius:12px">${code}</div><button class="primary" onclick="navigator.clipboard?.writeText('${code}');toast('Code copied!');closeModal()">Copy invite code</button>`)
+}
+
+function chooseSubject(){
+  openModal(`<div class="modalhead"><h3>Choose a subject</h3><button class="close" onclick="closeModal()">×</button></div><p>Pick a subject to practice.</p>${Object.keys(questionSets).filter(s=>s!=="Mixed Subjects").map(s=>`<button class="option" onclick="showLevelPicker('${s}')" style="margin:6px 0;padding:12px;width:100%;text-align:left;border:1px solid #dbe3f0;background:#f8faff;border-radius:10px;font-weight:600">${s} →</button>`).join('')}`)
+}
+
+function openProfileSettings(){
+  openModal(`<div class="modalhead"><h3>⚙️ Profile & Settings</h3><button class="close" onclick="closeModal()">×</button></div><p>Update your display name or reset progress.</p><label style="font-size:11px;font-weight:700">Your Name</label><input id="profilename" value="${username}"><button class="primary" onclick="saveProfile()">Save Changes</button><button class="secondary" onclick="resetData()" style="width:100%;margin-top:10px;color:#9a3434;border-color:#e98080">Reset All Progress</button>`)
+}
+
+function saveProfile(){
+  let newName = document.getElementById('profilename').value.trim();
+  if(newName){
+    username = newName;
+    localStorage.setItem('ll_username', username);
+    updateUIStats();
+    toast('Profile updated successfully!');
+    closeModal();
+  }
+}
+
+function resetData(){
+  if(confirm('Are you sure you want to reset all your stats and XP?')){
+    localStorage.clear();
+    xp=0; tests=0; correct=0; total=0; username='Student';
+    updateUIStats();
+    toast('Progress reset!');
+    closeModal();
+  }
+}
+
+function searchItems(value){
+  let v = value.toLowerCase();
+  document.querySelectorAll('.subject').forEach(s => s.style.display = s.dataset.search.includes(v) || !v ? '' : 'none');
+}
+
+document.querySelectorAll('[data-page]').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('[data-page]').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  let page = b.dataset.page;
+  if(page === 'Home') window.scrollTo({top:0, behavior:'smooth'});
+  else if(page === 'Practice') chooseSubject();
+  else if(page === 'Challenges') openChallenge();
+  else if(page === 'Leaderboard') toast('Leaderboard is displayed on home page');
+  else if(page === 'Progress') toast(`Completed tests: ${tests}, XP: ${xp}`);
+  else if(page === 'Profile' || page === 'Settings') openProfileSettings();
+}));
+</script>
+</body>
+</html>
